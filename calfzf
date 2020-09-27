@@ -1,0 +1,60 @@
+#!/bin/bash
+# Template from https://github.com/seanbreckenridge/havecmd
+
+# get the name of this script
+declare script_name
+script_name="$(basename "${BASH_SOURCE[0]}")"
+
+# function to verify an external command is installed
+havecmd() {
+	local BINARY ERRMSG
+	# error if first argument isn't provided
+	BINARY="${1:?Must provide command to check}"
+	# the commend exists, exit with 0 (success!)
+	if command -v "$BINARY" >/dev/null 2>&1; then
+		return 0
+	else
+		# construct error message
+		ERRMSG="'$script_name' requires '$BINARY', could not find that on your \$PATH"
+		if [[ -n "$2" ]]; then
+			ERRMSG="$ERRMSG. $2"
+		fi
+		printf '%s\n' "$ERRMSG" 1>&2
+		return 1
+	fi
+}
+
+# If the first argument isn't available on the users $PATH
+# print an error and the second argument, if given
+# set the -e flag; exits if any of the dependencies aren't satisfied
+set -e
+# Examples
+havecmd calories
+havecmd sort
+havecmd tr
+havecmd fzf "See https://github.com/junegunn/fzf"
+havecmd jq "See https://stedolan.github.io/jq/download/"
+set +e
+
+main() {
+	local HISTORY SELECTED
+	local -a CHOSEN=()
+	HISTORY="$(calories export | jq -r '.entries | .[] | "\(.calories)|\(.food)"' | sort -u -t"|" -k'1,1' -n)"
+	SELECTED="$(fzf --header="What to add to calories?" <<<"${HISTORY}")" || {
+		echo "Didn't select something to add to calories..." 1>&2
+		return 1
+	}
+	# split into array
+	# CHOSEN[0] = calories
+	# CHOSEN[1] = name of food
+	readarray -d "|" -t CHOSEN <<<"${SELECTED}"
+	if [[ "${#CHOSEN[@]}" != 2 ]]; then
+		printf "Error splitting '%s' into two elements, food description can't contain the pipe '|' character\n" "$SELECTED" 1>&2
+		return 1
+	fi
+	calories add "${CHOSEN[0]}" "${CHOSEN[1]/$'\n'/}" || exit $?
+	calories # print todays calories
+}
+
+# exit code of the main function is the exit code of the entire script
+main "$@" || exit $?
