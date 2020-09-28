@@ -28,10 +28,9 @@ havecmd() {
 # print an error and the second argument, if given
 # set the -e flag; exits if any of the dependencies aren't satisfied
 set -e
-# Examples
-havecmd calories
+havecmd printf
 havecmd sort
-havecmd tr
+havecmd calories "See https://github.com/zupzup/calories"
 havecmd fzf "See https://github.com/junegunn/fzf"
 havecmd jq "See https://stedolan.github.io/jq/download/"
 set +e
