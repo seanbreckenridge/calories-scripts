@@ -38,7 +38,7 @@ set +e
 main() {
 	local HISTORY SELECTED
 	local -a CHOSEN=()
-	HISTORY="$(calories export | jq -r '.entries | .[] | "\(.calories)|\(.food)"' | sort -u -t"|" -k'1,1' -n)"
+	HISTORY="$(calories export | jq -r '.entries | .[] | "\(.calories)|\(.food)"' | sort -u)"
 	SELECTED="$(fzf --header="What to add to calories?" <<<"${HISTORY}")" || {
 		echo "Didn't select something to add to calories..." 1>&2
 		return 1
