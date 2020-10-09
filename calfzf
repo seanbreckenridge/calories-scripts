@@ -28,7 +28,6 @@ havecmd() {
 # print an error and the second argument, if given
 # set the -e flag; exits if any of the dependencies aren't satisfied
 set -e
-havecmd printf
 havecmd sort
 havecmd calories "See https://github.com/zupzup/calories"
 havecmd fzf "See https://github.com/junegunn/fzf"
