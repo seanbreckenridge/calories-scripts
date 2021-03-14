@@ -12,7 +12,7 @@ As you add more things to calories using `calories add <cal> '<name>'`, this pic
 
 ### calswap
 
-Swaps the current calories database (by updating your `$GOBIN/.caloriesconf` file) to another database
+Swaps the current calories database (by updating your `$GOBIN/.caloriesconf` file) to another database. If the path doesn't exist, it copies the currently active database, along with all the data
 
 ### calmerge
 
