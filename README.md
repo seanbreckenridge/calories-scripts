@@ -16,21 +16,25 @@ Swaps the current calories database (by updating your `$GOBIN/.caloriesconf` fil
 
 ### calmerge
 
-Note: creates a backup of your current database before modifying anything.
+Note: creates a backup of your current database before modifying anything
 
 Merges multiple 'calories' databases together.
+
 Merges entries and weights from the current and any
 database(s) passed as arguments, removing
 duplicate entries. The resulting entries are imported
 into the currently active database, using 'calories import'
 
 For food, a duplicate is determined by using the following:
-(created, entryDate, calories, food)
+
+`(created, entryDate, calories, food)`
+
 i.e., ignoring the bmr/amr, since those may differ based on
 inconsistencies between weights on different databases
 
 For weight duplicates are determined using:
-(created, weight)
+
+`(created, weight)`
 
 ids may change during the merge process
 
