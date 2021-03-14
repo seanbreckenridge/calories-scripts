@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# Swaps the active calories database to another path
+# If the path doesn't exist, it copies the current database,
+# along with all the data
+
+declare script_name
+script_name='calswap'
+
+# function to verify an external command is installed
+havecmd() {
+	local BINARY ERRMSG
+	# error if first argument isn't provided
+	BINARY="${1:?Must provide command to check}"
+	# the commend exists, exit with 0 (success!)
+	if command -v "$BINARY" >/dev/null 2>&1; then
+		return 0
+	else
+		# construct error message
+		ERRMSG="'$script_name' requires '$BINARY', could not find that on your \$PATH"
+		if [[ -n "$2" ]]; then
+			ERRMSG="$ERRMSG. $2"
+		fi
+		printf '%s\n' "$ERRMSG" 1>&2
+		return 1
+	fi
+}
+
+set -e
+havecmd realpath
+havecmd calories "See https://github.com/zupzup/calories"
+havecmd jq "See https://stedolan.github.io/jq/download/"
+set +e
+
+conf_path() {
+	printf '%s' "${GOBIN:?The GOBIN environment variable must be set}/.caloriesconf"
+}
+
+db_path() {
+	cat "$(conf_path)"
+}
+
+# updates the caloriesconf to the filepath passed as the first argument
+update_caloriesconf() {
+	local CONF_PATH
+	CONF_PATH="$(conf_path)" || return $?
+	printf '%s' "${1?:Must pass path to update caloriesconf with}" >"${CONF_PATH}"
+}
+
+main() {
+	local SWAP_TO CURRENT_DB
+	SWAP_TO="${1:?Must provide a path to swap the current database to}"
+	SWAP_TO="$(realpath "${SWAP_TO}")"
+	CURRENT_DB="$(db_path)" || return $?
+	# make sure that isn't already the active database
+	if [[ "${SWAP_TO}" == "${CURRENT_DB}" ]]; then
+		printf 'Error: "%s" is already the active database...\n' "${SWAP_TO}" >&2
+		return 1
+	fi
+	# if the database doesn't exist, copy the current database
+	if [[ ! -e "${SWAP_TO}" ]]; then
+		printf "Database doesn't exist, copying current database...\n"
+		# cp should error if the files are the same path
+		cp -v "${CURRENT_DB}" "${SWAP_TO}" || return $?
+	fi
+	# update the caloriesconf file to the new database path
+	update_caloriesconf "$SWAP_TO" || return $?
+	printf 'Successfully swapped the current database to "%s"\n' "${SWAP_TO}"
+}
+
+main "$@" || exit $?
