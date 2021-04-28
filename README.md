@@ -2,6 +2,8 @@
 
 Scripts for interacting with [`calories`](https://github.com/zupzup/calories)
 
+These are up here incase anyone wants to try hacking on them, I don't expect to update/use these anymore as I've replaced this with [ttally](https://github.com/seanbreckenridge/ttally)
+
 ### calfzf
 
 A [`fzf`](https://github.com/junegunn/fzf) interface to , to add something you've eaten in the past again.
