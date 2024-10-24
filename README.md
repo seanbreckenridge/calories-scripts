@@ -2,13 +2,13 @@
 
 Scripts for interacting with [`calories`](https://github.com/zupzup/calories)
 
-These are up here incase anyone wants to try hacking on them, I don't expect to update/use these anymore as I've replaced this with [ttally](https://github.com/seanbreckenridge/ttally)
+These are up here incase anyone wants to try hacking on them, I don't expect to update/use these anymore as I've replaced this with [ttally](https://github.com/purarue/ttally)
 
 ### calfzf
 
 A [`fzf`](https://github.com/junegunn/fzf) interface to , to add something you've eaten in the past again.
 
-![](https://raw.githubusercontent.com/seanbreckenridge/calories-fzf/master/demo.gif)
+![](https://raw.githubusercontent.com/purarue/calories-fzf/master/demo.gif)
 
 As you add more things to calories using `calories add <cal> '<name>'`, this picks them up using `calories export`.
 
@@ -58,7 +58,7 @@ Dependencies: `bash`, `python3.6+`
 You could install each of the scripts manually onto your `$PATH`, or use the `Makefile`, which attempts to install them into `~/.local/bin`:
 
 ```
-git clone https://github.com/seanbreckenridge/calories-scripts
+git clone https://github.com/purarue/calories-scripts
 cd ./calories-scripts
 make
 ```
